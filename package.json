@@ -116,6 +116,10 @@
       "types": "./dist/plugin-sdk/googlechat.d.ts",
       "default": "./dist/plugin-sdk/googlechat.js"
     },
+    "./plugin-sdk/webex": {
+      "types": "./dist/plugin-sdk/webex.d.ts",
+      "default": "./dist/plugin-sdk/webex.js"
+    },
     "./plugin-sdk/irc": {
       "types": "./dist/plugin-sdk/irc.d.ts",
       "default": "./dist/plugin-sdk/irc.js"

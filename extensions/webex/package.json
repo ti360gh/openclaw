@@ -1,0 +1,22 @@
+{
+  "name": "@openclaw/webex",
+  "version": "2026.3.3",
+  "type": "module",
+  "peerDependencies": {
+    "openclaw": ">=2026.3.2"
+  },
+  "openclaw": {
+    "extensions": ["./index.ts"],
+    "channel": {
+      "id": "webex",
+      "label": "Webex",
+      "selectionLabel": "Webex (Bot Token)",
+      "detailLabel": "Webex",
+      "docsPath": "/channels/webex",
+      "docsLabel": "webex",
+      "blurb": "Cisco Webex messaging via Bot Token and webhooks.",
+      "aliases": ["cisco-webex", "webex-teams"],
+      "order": 60
+    }
+  }
+}
