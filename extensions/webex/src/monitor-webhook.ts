@@ -95,8 +95,10 @@ async function processWebexMessage(params: {
 
   // Skip messages from the bot itself
   if (account.config.botId && message.personId === account.config.botId) {
+    console.log(`[webex] skipping self-message ${messageId}`);
     return;
   }
+  console.log(`[webex] processing message ${messageId} from ${message.personId} in ${message.roomType}`);
 
   const roomId = message.roomId;
   const text = message.text ?? message.markdown ?? "";
@@ -169,7 +171,7 @@ async function processWebexMessage(params: {
             account,
             roomId,
             text: payload.text,
-            parentId: message.parentId,
+            parentId: message.parentId ?? (isGroup ? messageId : undefined),
           });
           target.statusSink?.({ lastOutboundAt: Date.now() });
         }

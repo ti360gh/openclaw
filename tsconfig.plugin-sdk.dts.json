@@ -19,6 +19,7 @@
     "src/plugin-sdk/slack.ts",
     "src/plugin-sdk/signal.ts",
     "src/plugin-sdk/imessage.ts",
+    "src/plugin-sdk/webex.ts",
     "src/plugin-sdk/whatsapp.ts",
     "src/plugin-sdk/line.ts",
     "src/plugin-sdk/msteams.ts",

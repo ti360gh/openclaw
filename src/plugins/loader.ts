@@ -97,6 +97,7 @@ const pluginSdkScopedAliasEntries = [
   { subpath: "slack", srcFile: "slack.ts", distFile: "slack.js" },
   { subpath: "signal", srcFile: "signal.ts", distFile: "signal.js" },
   { subpath: "imessage", srcFile: "imessage.ts", distFile: "imessage.js" },
+  { subpath: "webex", srcFile: "webex.ts", distFile: "webex.js" },
   { subpath: "whatsapp", srcFile: "whatsapp.ts", distFile: "whatsapp.js" },
   { subpath: "line", srcFile: "line.ts", distFile: "line.js" },
   { subpath: "msteams", srcFile: "msteams.ts", distFile: "msteams.js" },

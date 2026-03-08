@@ -15,7 +15,7 @@ import {
   resolveWebexAccount,
   type ResolvedWebexAccount,
 } from "./accounts.js";
-import { sendWebexMessage, probeWebex } from "./api.js";
+import { sendWebexMessage, probeWebex, getWebexMe } from "./api.js";
 import { resolveWebexWebhookPath, startWebexMonitor } from "./monitor.js";
 
 const CHANNEL_ID = "webex" as const;
@@ -132,6 +132,19 @@ export const webexPlugin: ChannelPlugin<ResolvedWebexAccount> = {
   },
   gateway: {
     startAccount: async (ctx) => {
+      // Fetch bot's own ID to prevent self-reply loops
+      try {
+        const me = await getWebexMe(ctx.account);
+        if (me.id) {
+          ctx.account.config.botId = me.id;
+          console.log(`[webex:${ctx.account.accountId}] botId resolved: ${me.id}`);
+        } else {
+          console.log(`[webex:${ctx.account.accountId}] /people/me returned no id`);
+        }
+      } catch (err) {
+        console.log(`[webex:${ctx.account.accountId}] failed to fetch botId: ${err}`);
+      }
+
       const webhookPath = resolveWebexWebhookPath(ctx.account.config);
       ctx.log?.info(`[${ctx.account.accountId}] starting Webex webhook at ${webhookPath}`);
       ctx.setStatus({ accountId: ctx.account.accountId, running: true });
