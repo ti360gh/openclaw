@@ -6,7 +6,9 @@
     "openclaw": ">=2026.3.2"
   },
   "openclaw": {
-    "extensions": ["./index.ts"],
+    "extensions": [
+      "./index.ts"
+    ],
     "channel": {
       "id": "webex",
       "label": "Webex",
@@ -15,13 +17,16 @@
       "docsPath": "/channels/webex",
       "docsLabel": "webex",
       "blurb": "Cisco Webex messaging via Bot Token and webhooks.",
-      "aliases": ["cisco-webex", "webex-teams"],
+      "aliases": [
+        "cisco-webex",
+        "webex-teams"
+      ],
       "order": 60
     },
     "install": {
       "npmSpec": "@openclaw/webex",
       "localPath": "extensions/webex",
       "defaultChoice": "local"
-    } 
+    }
   }
 }

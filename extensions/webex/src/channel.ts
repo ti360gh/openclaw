@@ -16,7 +16,7 @@ import {
   type ResolvedWebexAccount,
 } from "./accounts.js";
 import { sendWebexMessage, probeWebex, getWebexMe } from "./api.js";
-import { resolveWebexWebhookPath, startWebexMonitor } from "./monitor.js";
+import { startWebexWebSocketMonitor } from "./monitor-websocket.js";
 
 const CHANNEL_ID = "webex" as const;
 const TEXT_CHUNK_LIMIT = 7439; // Webex markdown character limit
@@ -84,6 +84,16 @@ export const webexPlugin: ChannelPlugin<ResolvedWebexAccount> = {
     resolveDefaultTo: ({ cfg, accountId }) =>
       resolveWebexAccount({ cfg, accountId: accountId ?? undefined }).config.defaultTo,
   },
+  messaging: {
+    targetResolver: {
+      looksLikeId: (raw: string) => {
+        const trimmed = raw.trim();
+        // WebEx IDs are base64-encoded URNs (e.g., Y2lzY29zcGFyazov...)
+        return /^[A-Za-z0-9+/=]{20,}$/.test(trimmed);
+      },
+      hint: "<roomId>",
+    },
+  },
   reload: { configPrefixes: ["channels.webex"] },
   security: {
     resolveDmPolicy: ({ account }) => ({
@@ -145,25 +155,19 @@ export const webexPlugin: ChannelPlugin<ResolvedWebexAccount> = {
         console.log(`[webex:${ctx.account.accountId}] failed to fetch botId: ${err}`);
       }
 
-      const webhookPath = resolveWebexWebhookPath(ctx.account.config);
-      ctx.log?.info(`[${ctx.account.accountId}] starting Webex webhook at ${webhookPath}`);
       ctx.setStatus({ accountId: ctx.account.accountId, running: true });
+      console.log(`[webex:${ctx.account.accountId}] starting Mercury WebSocket monitor`);
 
-      const unregister = await startWebexMonitor({
-        account: ctx.account,
-        config: ctx.cfg,
-        abortSignal: ctx.abortSignal,
-        webhookPath,
-        statusSink: (patch) => ctx.setStatus({ accountId: ctx.account.accountId, ...patch }),
-      });
-
-      await new Promise<void>((resolve) => {
-        if (ctx.abortSignal.aborted) resolve();
-        else ctx.abortSignal.addEventListener("abort", () => resolve(), { once: true });
-      });
-
-      unregister?.();
-      ctx.setStatus({ accountId: ctx.account.accountId, running: false, lastStopAt: Date.now() });
+      try {
+        await startWebexWebSocketMonitor({
+          account: ctx.account,
+          config: ctx.cfg,
+          abortSignal: ctx.abortSignal,
+          statusSink: (patch) => ctx.setStatus({ accountId: ctx.account.accountId, ...patch }),
+        });
+      } finally {
+        ctx.setStatus({ accountId: ctx.account.accountId, running: false, lastStopAt: Date.now() });
+      }
     },
   },
 };

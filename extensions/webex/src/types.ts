@@ -37,6 +37,31 @@ export type WebexMessage = {
   created?: string;
 };
 
+// Mercury WebSocket types
+
+export type WebexDeviceInfo = {
+  url?: string;
+  webSocketUrl?: string;
+  deviceName?: string;
+};
+
+export type WebexMercuryActivity = {
+  id?: string;
+  verb?: string;
+  actor?: { id?: string; displayName?: string; type?: string };
+  object?: { id?: string; displayName?: string; objectType?: string };
+  target?: { id?: string; url?: string };
+};
+
+export type WebexMercuryEvent = {
+  id?: string;
+  type?: string;
+  data?: {
+    eventType?: string;
+    activity?: WebexMercuryActivity;
+  };
+};
+
 export type WebexWebhookData = {
   id?: string;
   name?: string;
